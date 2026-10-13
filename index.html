@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Leipzig Roleplay – Emergency Hamburg Server</title>
+    <style>
+        :root {
+            --bg: #070c14;
+            --ink: #f1f5fa;
+            --mut: #9aabbd;
+            --card: #0f1824;
+            --line: #1e2d3f;
+            --blue: #2f8cff;
+            --red: #ff2d3f;
+            --yel: #ffc928;
+            --tc: var(--blue);
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        @media(prefers-color-scheme:light) {
+            :root:not([data-theme="dark"]) {
+                --bg: #eef2f7;
+                --ink: #0b1623;
+                --mut: #4b5b6c;
+                --card: #fff;
+                --line: #cdd6e0;
+                --blue: #0a5bd6;
+                --red: #d9182b
+            }
+        }
+
+        :root[data-theme="light"] {
+            --bg: #eef2f7;
+            --ink: #0b1623;
+            --mut: #4b5b6c;
+            --card: #fff;
+            --line: #cdd6e0;
+            --blue: #0a5bd6;
+            --red: #d9182b
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: env(safe-area-inset-top, 0px)
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 17px/1.65 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden
+        }
+
+        .w {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 0 22px;
+            position: relative
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        summary:focus-visible {
+            outline: 3px solid var(--yel);
+            outline-offset: 3px
+        }
+
+        nav {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+            padding: 18px 0;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2
+        }
+
+        nav b {
+            margin-right: auto;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        nav b i {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--red);
+            box-shadow: 0 0 12px var(--red);
+            animation: dot 1s steps(1) infinite
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--mut);
+            font-weight: 600
+        }
+
+        nav a:hover {
+            color: var(--ink)
+        }
+
+        @keyframes dot {
+            50% {
+                background: var(--blue);
+                box-shadow: 0 0 12px var(--blue)
+            }
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            top: -30%;
+            width: 70%;
+            height: 160%;
+            z-index: -1;
+            filter: blur(90px);
+            opacity: .0;
+            animation: glow 2s steps(1) infinite
+        }
+
+        .hero::before {
+            left: -25%;
+            background: radial-gradient(closest-side, var(--red), transparent)
+        }
+
+        .hero::after {
+            right: -25%;
+            background: radial-gradient(closest-side, var(--blue), transparent);
+            animation-delay: 1s
+        }
+
+        @keyframes glow {
+            0% {
+                opacity: .5
+            }
+
+            50% {
+                opacity: .08
+            }
+        }
+
+        .hero .w {
+            padding-top: 70px;
+            padding-bottom: 90px
+        }
+
+        .tag {
+            display: inline-block;
+            border: 1px solid var(--line);
+            background: color-mix(in srgb, var(--card) 70%, transparent);
+            padding: 6px 14px;
+            border-radius: 99px;
+            color: var(--mut);
+            font-size: .9rem;
+            margin-bottom: 26px
+        }
+
+        h1 {
+            font-size: clamp(3.2rem, 13vw, 8.5rem);
+            line-height: .88;
+            margin: 0 0 26px;
+            font-weight: 900;
+            letter-spacing: -.045em;
+            text-transform: uppercase
+        }
+
+        h1 em {
+            font-style: normal;
+            display: block;
+            -webkit-text-stroke: 2px var(--ink);
+            color: transparent
+        }
+
+        .hero p {
+            max-width: 50ch;
+            font-size: 1.25rem;
+            color: var(--mut);
+            margin: 0 0 32px
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 28px;
+            border-radius: 8px;
+            font-weight: 800;
+            text-decoration: none;
+            margin: 0 10px 10px 0;
+            transition: transform .15s, box-shadow .15s
+        }
+
+        .btn:hover {
+            transform: translateY(-3px)
+        }
+
+        .b1 {
+            background: var(--yel);
+            color: #101820;
+            box-shadow: 0 6px 24px rgba(255, 201, 40, .3)
+        }
+
+        .b2 {
+            border: 2px solid var(--line);
+            color: var(--ink)
+        }
+
+        .tick {
+            border-block: 1px solid var(--line);
+            background: var(--card);
+            overflow: hidden;
+            white-space: nowrap
+        }
+
+        .tick div {
+            display: inline-block;
+            padding: 12px 0;
+            animation: mv 40s linear infinite;
+            color: var(--mut);
+            font-size: .95rem
+        }
+
+        .tick span {
+            margin: 0 28px
+        }
+
+        .tick b {
+            color: var(--yel)
+        }
+
+        @keyframes mv {
+            to {
+                transform: translateX(-50%)
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            .hero::before,
+            .hero::after,
+            .tick div,
+            nav b i {
+                animation: none
+            }
+
+            .hero::before,
+            .hero::after {
+                opacity: .25
+            }
+        }
+
+        section {
+            padding: 70px 0
+        }
+
+        h2 {
+            font-size: clamp(1.9rem, 5vw, 3rem);
+            margin: 0 0 10px;
+            letter-spacing: -.02em;
+            line-height: 1.1
+        }
+
+        .lead {
+            color: var(--mut);
+            max-width: 58ch;
+            margin: 0 0 30px
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px
+        }
+
+        .tabs button {
+            font: inherit;
+            font-weight: 700;
+            color: var(--ink);
+            background: var(--card);
+            border: 2px solid var(--line);
+            padding: 11px 20px;
+            border-radius: 99px;
+            cursor: pointer
+        }
+
+        .tabs button[aria-selected="true"] {
+            border-color: var(--tc);
+            background: var(--tc);
+            color: #fff
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-top: 5px solid var(--tc);
+            border-radius: 10px;
+            padding: 28px;
+            display: grid;
+            gap: 22px;
+            grid-template-columns: 1.2fr 1fr
+        }
+
+        @media(max-width:720px) {
+            .panel {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .panel h3 {
+            margin: 0 0 8px;
+            font-size: 1.6rem
+        }
+
+        .panel p {
+            margin: 0;
+            color: var(--mut)
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start
+        }
+
+        .chips span {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: .92rem
+        }
+
+        .pill {
+            display: inline-block;
+            background: var(--tc);
+            color: #fff;
+            font-weight: 700;
+            font-size: .85rem;
+            padding: 3px 12px;
+            border-radius: 99px;
+            margin-top: 14px
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            counter-reset: s
+        }
+
+        .steps li {
+            counter-increment: s;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 24px
+        }
+
+        .steps li::before {
+            content: counter(s);
+            display: block;
+            font-size: 3.2rem;
+            font-weight: 900;
+            line-height: 1;
+            color: var(--yel);
+            margin-bottom: 10px
+        }
+
+        .steps b {
+            display: block;
+            font-size: 1.1rem
+        }
+
+        .steps span {
+            color: var(--mut)
+        }
+
+        .rules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 12px
+        }
+
+        .rule {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--red);
+            padding: 16px 20px;
+            border-radius: 8px
+        }
+
+        .rule b {
+            display: block
+        }
+
+        .rule span {
+            color: var(--mut)
+        }
+
+        details {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            max-width: 780px
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 700
+        }
+
+        details p {
+            margin: 10px 0 0;
+            color: var(--mut)
+        }
+
+        .join {
+            border-radius: 16px;
+            padding: 64px 26px;
+            text-align: center;
+            border: 1px solid var(--line);
+            background: linear-gradient(120deg, color-mix(in srgb, var(--red) 28%, var(--card)), var(--card) 50%, color-mix(in srgb, var(--blue) 28%, var(--card)))
+        }
+
+        .join h2 {
+            font-size: clamp(2rem, 6vw, 3.6rem)
+        }
+
+        .join p {
+            color: var(--mut);
+            margin: 0 auto 26px;
+            max-width: 44ch
+        }
+
+        footer {
+            padding: 30px 0 44px;
+            color: var(--mut);
+            font-size: .88rem;
+            border-top: 1px solid var(--line)
+        }
+    </style>
+</head>
+
+<body>
+    <header class="hero">
+        <div class="w">
+            <nav><b><i></i>Leipzig Roleplay</b><a href="#teams">Teams</a><a href="#start">Einstieg</a><a
+                    href="#regeln">Regeln</a><a href="#faq">FAQ</a></nav>
+            <div style="padding-top:60px;padding-bottom:80px">
+                <span class="tag">Deutscher Emergency Hamburg Server</span>
+                <h1>Leipzig<em>Roleplay</em></h1>
+                <p>Blaulicht an, Funk auf, Einsatz. Wähle dein Team ohne Bewerbung und spiele mit einer Community, die
+                    Roleplay lebt.</p>
+                <a class="btn b1" href="#join">Jetzt beitreten</a><a class="btn b2" href="#teams">Teams ansehen</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="tick" aria-hidden="true">
+        <div>
+            <span><b>Funk:</b> Wohnungsbrand, Löschzug ausrücken</span><span><b>Funk:</b> Verkehrsunfall mit
+                Verletzten</span><span><b>Funk:</b> Streife zur Verkehrskontrolle</span><span><b>Funk:</b> Notfall, RTW
+                unterwegs</span><span><b>Funk:</b> Person vermisst, Suche läuft</span>
+            <span><b>Funk:</b> Wohnungsbrand, Löschzug ausrücken</span><span><b>Funk:</b> Verkehrsunfall mit
+                Verletzten</span><span><b>Funk:</b> Streife zur Verkehrskontrolle</span><span><b>Funk:</b> Notfall, RTW
+                unterwegs</span><span><b>Funk:</b> Person vermisst, Suche läuft</span>
+        </div>
+    </div>
+
+    <div class="w">
+        <section id="teams">
+            <h2>Wähle dein Team</h2>
+            <p class="lead">Keine Bewerbung, keine Wartezeit. Such dir aus, was du spielen willst, und wechsle
+                jederzeit.</p>
+            <div class="tabs" role="tablist" id="tabs"></div>
+            <div class="panel" id="panel" role="tabpanel"></div>
+        </section>
+
+        <section id="start" style="padding-top:20px">
+            <h2>So startest du</h2>
+            <p class="lead">In wenigen Minuten bist du im Spiel.</p>
+            <ol class="steps">
+                <li><b>Discord beitreten</b><span>Hier gibt es Ankündigungen, Support und andere Spieler.</span></li>
+                <li><b>Regeln bestätigen</b><span>Damit alle fair und respektvoll miteinander spielen.</span></li>
+                <li><b>Team wählen und los</b><span>Starte Emergency Hamburg und fahre deinen ersten Einsatz.</span>
+                </li>
+            </ol>
+        </section>
+
+        <section id="regeln" style="padding-top:20px">
+            <h2>Serverregeln</h2>
+            <p class="lead">Wenige klare Regeln, damit es für alle Spaß macht.</p>
+            <div class="rules">
+                <div class="rule"><b>Respekt</b><span>Keine Beleidigungen, Diskriminierung oder Mobbing.</span></div>
+                <div class="rule"><b>Fair RP</b><span>Bleibe in deiner Rolle. Out-of-Character-Chat kennzeichnest du mit
+                        „//".</span></div>
+                <div class="rule"><b>Realistisch handeln</b><span>Kein Fail-RP: Verhalte dich so, wie dein Charakter es
+                        tun würde.</span></div>
+                <div class="rule"><b>Kein Trolling</b><span>Kein Random Deathmatch, Vehicle Deathmatch oder Blockieren
+                        von Einsätzen.</span></div>
+                <div class="rule"><b>Kein Powergaming, kein Metagaming</b><span>Nutze nur Wissen, das dein Charakter im
+                        Spiel hat.</span></div>
+                <div class="rule"><b>Team-Anweisungen</b><span>Folge dem Serverteam. Beschwerden klärst du im
+                        Support-Ticket.</span></div>
+            </div>
+        </section>
+
+        <section id="faq" style="padding-top:20px">
+            <h2>Häufige Fragen</h2>
+            <p class="lead">Kurz erklärt.</p>
+            <details>
+                <summary>Muss ich mich für ein Team bewerben?</summary>
+                <p>Nein. Alle Teams sind frei wählbar, und du kannst jederzeit wechseln.</p>
+            </details>
+            <details>
+                <summary>Brauche ich ein Mikrofon?</summary>
+                <p>Nein, aber für den Funk bei Einsatzkräften ist es empfohlen.</p>
+            </details>
+            <details>
+                <summary>Ich habe einen Regelverstoß gesehen. Was tun?</summary>
+                <p>Erstelle ein Support-Ticket im Discord, mit Namen und Beweisen wie Screenshots oder Clips.</p>
+            </details>
+            <details>
+                <summary>Was kostet es?</summary>
+                <p>Der Beitritt ist kostenlos.</p>
+            </details>
+        </section>
+
+        <section id="join" style="padding-top:20px">
+            <div class="join">
+                <h2>Bereit für deinen ersten Einsatz?</h2>
+                <p>Tritt dem Discord bei und spiele noch heute mit.</p><a class="btn b1" href="#join">Discord-Link hier
+                    einfügen</a>
+            </div>
+        </section>
+        <footer>
+            <p style="margin:0 0 10px">Leipzig Roleplay ist ein Fanprojekt und steht in keiner Verbindung zu Roblox oder
+                den Entwicklern von Emergency Hamburg.</p>
+            <p style="margin:0"><a href="https://legal.oppro-network.de" target="_blank" rel="noopener noreferrer"
+                    style="font-weight:700">Impressum</a><span style="margin:0 10px">|</span>Made by OPPRO.NET
+                Development, A Project of OPPRO.NET Network</p>
+        </footer>
+    </div>
+
+    <script>
+        var T = [
+            { n: "Feuerwehr", c: "#ff2d3f", t: "Löschen, retten, bergen. Von Bränden bis zu technischen Hilfeleistungen bist du mittendrin.", v: ["Löschfahrzeug", "Drehleiter", "Rüstwagen", "Einsatzleitung"] },
+            { n: "Polizei", c: "#2f8cff", t: "Streife fahren, Verkehr kontrollieren und Einsätze sauber abarbeiten.", v: ["Streifenwagen", "Motorrad", "Zivilfahrzeug", "Verkehrsdienst"] },
+            { n: "Rettungsdienst", c: "#ffc928", t: "Menschen in Notfällen versorgen und sicher ins Krankenhaus bringen.", v: ["RTW", "Notarzt", "Krankentransport", "Rettungshubschrauber"] },
+            { n: "Zivilisten", c: "#8a99aa", t: "Spiele deinen eigenen Charakter mit Beruf, Fahrzeug und Geschichte.", v: ["Eigener Beruf", "Privatfahrzeug", "Wohnung", "Eigene Story"] }];
+        var tabs = document.getElementById("tabs"), panel = document.getElementById("panel");
+        function show(i) {
+            var x = T[i]; document.documentElement.style.setProperty("--tc", x.c);
+            Array.prototype.forEach.call(tabs.children, function (b, j) { b.setAttribute("aria-selected", j === i) });
+            panel.innerHTML = "";
+            var l = document.createElement("div"), r = document.createElement("div");
+            var h = document.createElement("h3"); h.textContent = x.n;
+            var p = document.createElement("p"); p.textContent = x.t;
+            var s = document.createElement("span"); s.className = "pill"; s.textContent = "Ohne Bewerbung";
+            l.appendChild(h); l.appendChild(p); l.appendChild(s);
+            r.className = "chips"; x.v.forEach(function (v) { var c = document.createElement("span"); c.textContent = v; r.appendChild(c) });
+            panel.appendChild(l); panel.appendChild(r)
+        }
+        T.forEach(function (x, i) { var b = document.createElement("button"); b.type = "button"; b.setAttribute("role", "tab"); b.textContent = x.n; b.onclick = function () { show(i) }; tabs.appendChild(b) });
+        show(0);
+    </script>
+</body>
+
+</html>
